@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Escolar - Controle de Escolas</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="home"></span>
+              Painel<span class="sr-only">(current)</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+      <h1>Escolas Cadastradas</h1>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Bairro</th>
+              <th>Alunos</th>
+              <th>Verba</th>
+              <th>Opções</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for school in schools %}
+            <tr>
+                <td>{{ school.name }}</td>
+                <td>{{ school.neigh }}</td>
+                <td>{{ school.students }}</td>
+                <td>{{ school.endow }}</td>
+                <td>
+                    <a href="/turmas/{{school.id}}">Turmas</a>
+                    <a href="/excluir/{{school.id}}">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Cadastrar Escolas</h4>
+
+      <form action="/" method="POST" class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="firstName">Escola</label>
+            <input type="text" class="form-control" id="nome" name="nome" placeholder="" value="" required>
+            <div class="invalid-feedback">
+              Valid first name is required.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="lastName">Bairro</label>
+            <input type="text" class="form-control" id="bairro" name="bairro" placeholder="" value="" required>
+            <div class="invalid-feedback">
+              Valid last name is required.
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <label for="firstName">Verba</label>
+            <input type="number" class="form-control" id="verba" name="verba" placeholder="" value="" required>
+            <div class="invalid-feedback">
+              Valid first name is required.
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar escola</button>
+ 
+
+      </form>
+    </main>
+        </div>
+ </div>
+      
+{% endblock %}
