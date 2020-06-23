@@ -45,14 +45,39 @@ def index():
         schools = School.query.order_by(School.id).all()
         return render_template('index.html', schools = schools)
 
-@app.route('/delete/<int:id>')
-def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
+@app.route('/excluir_escola/<int:id>')
+def delete_school(id):
+    school_to_delete = School.query.get_or_404(id)
 
     try:
-        db.session.delete(task_to_delete)
+        db.session.delete(school_to_delete)
         db.session.commit()
         return redirect('/')
+    except:
+        return 'There was an issue'
+
+@app.route('/excluir_turma', methods=['GET'])
+def delete_class():
+    data = request.args.to_dict()
+    sc = data['sc']
+    id = data['cl']
+    class_to_delete = Classes.query.get_or_404(id)
+    school_sel = School.query.filter_by(id = sc).all()
+    school_name = school_sel[0].name
+    classes = Classes.query.filter_by(school = school_sel[0].name).all()
+
+    alunos = class_to_delete.students
+    total_alunos = school_sel[0].students
+    total_alunos = total_alunos - int(alunos)
+
+    school = School.query.get_or_404(sc)
+    school.students = total_alunos
+
+
+    try:
+        db.session.delete(class_to_delete)
+        db.session.commit()
+        return redirect('/turmas/'+str(sc))
     except:
         return 'There was an issue'
 
