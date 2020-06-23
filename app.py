@@ -56,19 +56,33 @@ def delete(id):
     except:
         return 'There was an issue'
 
-@app.route('/update/<int:id>', methods=['POST', 'GET'])
+@app.route('/turmas/<int:id>', methods=['POST', 'GET'])
 def update(id):
-    task = Todo.query.get_or_404(id)
+    school_sel = School.query.filter_by(id = id).all()
+    school_name = school_sel[0].name
+    classes = Classes.query.filter_by(school = school_sel[0].name).all()
 
     if request.method == 'POST':
-        task.content = request.form['content']
+        turma = request.form['turma']
+        alunos = request.form['alunos']
+        total_alunos = school_sel[0].students
+        total_alunos = total_alunos + int(alunos)
+
+        new_class = Classes(name = turma, students = alunos, school = school_sel[0].name)
+        school = School.query.get_or_404(id)
+        school.students = total_alunos
+
         try:
+            db.session.add(new_class)
             db.session.commit()
-            return redirect('/')
+
         except:
-            return 'There was an issue'
+            return "There was an issue"
+        
+        return redirect('/turmas/'+str(id))
+
     else:
-        return render_template('update.html',task = task)
+        return render_template('turmas.html', classes = classes, school_name = school_name, id = id)
 
 
 if __name__ == "__main__":
